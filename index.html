@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystical Indian Fortune Teller</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F8E9D2;
+            color: #4A3728;
+            text-align: center;
+            padding: 20px;
+            background-image: linear-gradient(rgba(248, 233, 210, 0.8), rgba(248, 233, 210, 0.8)), 
+                              url('/api/placeholder/1200/800');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #B17A50;
+        }
+        
+        h1 {
+            color: #9C3848;
+            font-size: 36px;
+            text-shadow: 1px 1px 2px #ccc;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: #9C3848;
+            font-style: italic;
+            margin-top: 0;
+        }
+        
+        .instructions {
+            background-color: rgba(177, 122, 80, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .question-form {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        input[type="text"] {
+            width: 80%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #B17A50;
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        button {
+            background-color: #9C3848;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #7C2838;
+        }
+        
+        .chakra-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+            max-width: 450px;
+        }
+        
+        .chakra {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-image: radial-gradient(circle, #FFC09F, #FF7E5F);
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            border: 3px solid #B17A50;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .chakra:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .chakra.selected {
+            border-color: #9C3848;
+            box-shadow: 0 0 15px #9C3848;
+        }
+        
+        .prediction-result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(156, 56, 72, 0.1);
+            display: none;
+        }
+        
+        .prediction-text {
+            font-size: 18px;
+            font-style: italic;
+            line-height: 1.6;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Designs for the chakras */
+        .chakra-design {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            opacity: 0.7;
+        }
+        
+        @media (max-width: 600px) {
+            .chakra-board {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .chakra {
+                width: 80px;
+                height: 80px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mystical Indian Fortune Teller</h1>
+        <h2>भविष्य दर्शन (Future Vision)</h2>
+        
+        <div class="instructions">
+            <p><strong>How to Play:</strong></p>
+            <ol>
+                <li>Think of a question about your future that you seek answers for.</li>
+                <li>Type your question in the box below (optional, only you will see this).</li>
+                <li>Clear your mind and select one of the mystical chakra stones.</li>
+                <li>Receive your fortune based on ancient Indian wisdom!</li>
+            </ol>
+        </div>
+        
+        <div class="game-area">
+            <div class="question-form">
+                <input type="text" id="question-input" placeholder="Enter your question here (optional)">
+            </div>
+            
+            <p>Now select one of the mystical chakra stones:</p>
+            
+            <div class="chakra-board" id="chakra-board">
+                <!-- Chakras will be created by JavaScript -->
+            </div>
+            
+            <div class="prediction-result" id="prediction-result">
+                <h3>Your Fortune Reveals:</h3>
+                <p class="prediction-text" id="prediction-text"></p>
+                <button id="play-again-btn">Ask Another Question</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>This game is for entertainment purposes only.</p>
+        </div>
+    </div>
+    
+    <script>
+        // Array of potential fortunes with an Indian theme
+        const fortunes = [
+            "The stars align in your favor. Like Lord Rama's triumph, your perseverance will lead to victory.",
+            "As Krishna guided Arjuna, wisdom will come to you when you need it most.",
+            "The river of life flows in unexpected directions. Be like the lotus - rising above troubled waters.",
+            "Patience is your greatest virtue now. Like the Himalayas, stand tall through the storm.",
+            "New opportunities await, like fresh flowers blooming after monsoon rains.",
+            "The cycle of karma brings balance. A good deed you performed will soon return to you.",
+            "Trust your intuition. The third eye chakra is strong within you.",
+            "Family bonds will strengthen through shared experiences, like the unbreakable threads of a sacred rakhi.",
+            "A teacher or mentor will enter your life, bringing the wisdom of ancient texts.",
+            "Like the many arms of Goddess Durga, you have the strength to overcome multiple challenges.",
+            "A journey awaits - whether physical or spiritual, it will transform your perspective.",
+            "This is a time for celebration. Dance like you're at Holi festival, full of color and joy.",
+            "Your creativity will flourish like the intricate patterns of a rangoli design.",
+            "Success comes through collaboration. Like the five elements, find harmony with those around you.",
+            "You are entering a phase of abundance, like a bountiful harvest after a good monsoon.",
+            "Let go of past hurts. As Ganga purifies, allow yourself to flow toward healing.",
+            "A lost connection will be restored, bringing peace to your heart.",
+            "Your hard work will bear sweet fruits, like a mango tree after patient tending.",
+            "A solution you seek is already within you, waiting to be discovered like hidden treasure.",
+            "The obstacle before you is actually a disguised blessing, much like Lord Ganesha who removes barriers.",
+            "Change is coming. Embrace it like the changing seasons of the subcontinent.",
+            "Listen carefully to the wisdom of elders - an important message awaits in their words.",
+            "Your generosity will create a circle of goodwill, returning to you tenfold.",
+            "Balance work and rest. Even Lord Vishnu takes time to recline on the cosmic ocean."
+        ];
+        
+        // Chakra colors and names
+        const chakras = [
+            { name: "Muladhara", color: "radial-gradient(circle, #ff5252, #b71c1c)" },
+            { name: "Svadhisthana", color: "radial-gradient(circle, #ff9800, #e65100)" },
+            { name: "Manipura", color: "radial-gradient(circle, #ffd600, #ff6f00)" },
+            { name: "Anahata", color: "radial-gradient(circle, #66bb6a, #2e7d32)" },
+            { name: "Vishuddha", color: "radial-gradient(circle, #29b6f6, #0277bd)" },
+            { name: "Ajna", color: "radial-gradient(circle, #7e57c2, #4527a0)" },
+            { name: "Sahasrara", color: "radial-gradient(circle, #d500f9, #aa00ff)" },
+            { name: "Brahma", color: "radial-gradient(circle, #f06292, #880e4f)" },
+            { name: "Indra", color: "radial-gradient(circle, #26c6da, #006064)" }
+        ];
+        
+        // Initialize the game
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create chakra stones
+            const chakraBoard = document.getElementById('chakra-board');
+            
+            chakras.forEach((chakra, index) => {
+                const chakraElement = document.createElement('div');
+                chakraElement.className = 'chakra';
+                chakraElement.id = `chakra-${index}`;
+                chakraElement.style.backgroundImage = chakra.color;
+                chakraElement.textContent = chakra.name;
+                
+                chakraElement.addEventListener('click', function() {
+                    selectChakra(index);
+                });
+                
+                chakraBoard.appendChild(chakraElement);
+            });
+            
+            // Play again button
+            document.getElementById('play-again-btn').addEventListener('click', resetGame);
+        });
+        
+        // Select a chakra and show prediction
+        function selectChakra(index) {
+            // Highlight selected chakra
+            const chakras = document.querySelectorAll('.chakra');
+            chakras.forEach(chakra => {
+                chakra.classList.remove('selected');
+            });
+            
+            document.getElementById(`chakra-${index}`).classList.add('selected');
+            
+            // Generate a prediction based on a combination of factors
+            const question = document.getElementById('question-input').value;
+            const currentDate = new Date();
+            const randomSeed = question.length + currentDate.getDate() + index;
+            const fortuneIndex = randomSeed % fortunes.length;
+            
+            // Display the prediction
+            const predictionText = document.getElementById('prediction-text');
+            predictionText.textContent = fortunes[fortuneIndex];
+            
+            // Show the prediction result area
+            document.getElementById('prediction-result').style.display = 'block';
+            
+            // Scroll to prediction
+            document.getElementById('prediction-result').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Reset the game
+        function resetGame() {
+            // Clear selected chakra
+            const chakras = document.querySelectorAll('.chakra');
+            chakras.forEach(chakra => {
+                chakra.classList.remove('selected');
+            });
+            
+            // Clear question
+            document.getElementById('question-input').value = '';
+            
+            // Hide prediction
+            document.getElementById('prediction-result').style.display = 'none';
+            
+            // Scroll back to top
+            document.querySelector('.game-area').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
